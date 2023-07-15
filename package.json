@@ -4,7 +4,8 @@
   "description": "",
   "main": "webhook.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "pm2 start ./webhook.js --watch --name='webhooks'",
+    "stop": "pm2 stop webhooks"
   },
   "keywords": [],
   "author": "",

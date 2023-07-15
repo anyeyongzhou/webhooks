@@ -1,7 +1,7 @@
 let http = require("http");
 let crypto = require("crypto");
 var spawn = require("child_process").spawn;
-//let sendMail = require("./sendMail");
+let sendMail = require("./sendMail");
 const SECRET = "123456";
 function sign(data) {
   return "sha1=" + crypto.createHmac("sha1", SECRET).update(data).digest("hex");
@@ -31,21 +31,21 @@ let server = http.createServer(function (req, res) {
         child.stdout.on("data", function (buffer) {
           buffers.push(buffer);
         });
-        // child.stdout.on("end", function () {
-        //   let logs = Buffer.concat(buffers).toString();
-        //   sendMail(
-        //     `${new Date()}</h1>
-        //     <h2>部署人: ${payload.pusher.name}</h2>
-        //     <h2>部署邮箱: ${payload.pusher.email}</h2>
-        //     <h2>提交信息: ${
-        //       payload.head_commit && payload.head_commit["message"]
-        //     }</h2>
-        //     <h2>布署日志: ${logs.replace("\r\n", "<br/>")}</h2>
-        // ` <
-        //       h1 >
-        //       部署日期
-        //   );
-        // });
+        child.stdout.on("end", function () {
+          let logs = Buffer.concat(buffers).toString();
+          sendMail(
+            `${new Date()}</h1>
+            <h2>部署人: ${payload.pusher.name}</h2>
+            <h2>部署邮箱: ${payload.pusher.email}</h2>
+            <h2>提交信息: ${
+              payload.head_commit && payload.head_commit["message"]
+            }</h2>
+            <h2>布署日志: ${logs.replace("\r\n", "<br/>")}</h2>
+        ` <
+              h1 >
+              部署日期
+          );
+        });
       }
     });
   } else {
