@@ -1,5 +1,5 @@
 #!/bin/bash
-WORK_PATH='/usr/projects/cool-admin-midway
+WORK_PATH='/usr/projects/cool-admin-midway'
 cd $WORK_PATH
 echo "先清理老代码"
 git reset --hard origin/master
