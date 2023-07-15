@@ -4,8 +4,8 @@
   "description": "",
   "main": "webhook.js",
   "scripts": {
-    "start": "pm2 start ./webhook.js --watch --name='webhooks'",
-    "stop": "pm2 stop webhooks"
+    "start": "pm2 start ./webhook.js  --name webhook --watch",
+    "stop": "pm2 stop webhook"
   },
   "keywords": [],
   "author": "",
