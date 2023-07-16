@@ -11,4 +11,4 @@ echo "删除旧容器"
 docker stop largevisualvcreen-container
 docker rm largevisualvcreen-container
 echo "启动新容器"
-docker container run -p 9000:9000 -d --name largevisualvcreen-container largevisualvcreen
+docker container run -p 9000:80 -d --name largevisualvcreen-container largevisualvcreen
