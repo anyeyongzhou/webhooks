@@ -9,9 +9,9 @@ git pull origin master
 echo "打包最新代码"
 npm run build
 echo "开始构建镜像"
-docker build -t LargeVisualScreen .
+docker build -t largevisualvcreen .
 echo "删除旧容器"
-docker stop LargeVisualScreen-container
-docker rm LargeVisualScreen-container
+docker stop largevisualvcreen-container
+docker rm largevisualvcreen-container
 echo "启动新容器"
-docker container run -p 9000:9000 -d --name LargeVisualScreen-container LargeVisualScreen
+docker container run -p 9000:9000 -d --name largevisualvcreen-container largevisualvcreen
