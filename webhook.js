@@ -1,5 +1,6 @@
 let http = require("http");
 let crypto = require("crypto");
+let dayjs = require("dayjs");
 var spawn = require("child_process").spawn;
 let sendMail = require("./sendMail");
 const SECRET = "123456";
@@ -26,18 +27,28 @@ let server = http.createServer(function (req, res) {
       //===========分割线===================
       if (event === "push") {
         //开始部署
+        // 获取当前时间戳
+        let nowTimestamp = dayjs().valueOf();
         let payload = JSON.parse(body);
         let child = spawn("sh", [`./${payload.repository.name}.sh`]);
-        console.log(payload.repository.name + "项目正在自动部署");
+        console.log(payload.repository.name + "项目开始自动部署");
         let buffers = [];
         child.stdout.on("data", function (buffer) {
           buffers.push(buffer);
         });
         child.stdout.on("end", function () {
+          console.log(payload.repository.name + "项目部署结束");
           let logs = Buffer.concat(buffers).toString();
+          let date = dayjs().format("YYYY年M月D日 HH:mm:ss");
+          // 获取当前时间戳
+          let nowTimestamp_1 = dayjs().valueOf();
+          let formattedDate = dayjs(nowTimestamp_1 - nowTimestamp).format(
+            "HH:mm"
+          );
           sendMail(`
-            <h1>部署日期: ${new Date()}</h1>
+            <h1>部署日期: ${date}</h1>
             <h2>部署人: ${payload.pusher.name}</h2>
+            <h2>部署时长: ${formattedDate}</h2>
             <h2>部署邮箱: ${payload.pusher.email}</h2>
             <h2>提交信息: ${
               payload.head_commit && payload.head_commit["message"]
@@ -52,5 +63,5 @@ let server = http.createServer(function (req, res) {
   }
 });
 server.listen(4000, () => {
-  console.log("服务正在4000端口上启动!");
+  console.log("webhook服务正在4000端口上启动!");
 });

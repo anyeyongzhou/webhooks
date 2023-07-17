@@ -1,6 +1,6 @@
 const nodemailer = require("nodemailer");
-const { simpleParser } = require("mailparser");
-const user = "w1354785752@163.com"; //
+const inlineBase64 = require("nodemailer-plugin-inline-base64"); //附件图片转化
+const user = "w1354785752@163.com"; //邮箱名
 const smtp = "FIECWWXLIRPRWUJH"; //在邮箱中获取的smtp码
 
 let transporter = nodemailer.createTransport({
@@ -38,19 +38,17 @@ function sendMail(message) {
       },
     ], */
   };
+  transporter.use("compile", inlineBase64({ cidPrefix: "somePrefix_" }));
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
       return console.log("发送邮件失败：" + error);
     } else {
-      console.log("邮件发送: %s", info.messageId);
-      console.log("邮件发送: %s", info.response);
-      simpleParser(info.envelope, function (err, parsed) {
-        if (err) console.log(err);
-
-        console.log(parsed.from.value[0].address); // 发件人地址
-        //console.log(parsed.to.value[0].address); // 收件人地址
-        //console.log(parsed.subject); // 邮件主题
-      });
+      console.log(
+        "邮件信息：发送者：%s，接收者：%s，发送状态：%s",
+        info.envelope.from,
+        info.envelope.to[0],
+        info.response
+      );
     }
   });
 }
