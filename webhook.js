@@ -28,7 +28,8 @@ let server = http.createServer(function (req, res) {
       if (event === "push") {
         let payload = JSON.parse(body);
         let commitMsg = payload.head_commit;
-        if (commitMsg.startsWith("deploy")) {
+        console.log(commitMsg);
+        if (commitMsg.toString().startsWith("deploy")) {
           //当提交信息为deploy时才触发部署
           return;
         }
