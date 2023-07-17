@@ -13,7 +13,7 @@ let transporter = nodemailer.createTransport({
 
 function sendMail(message) {
   let mailOptions = {
-    from: '"w1354785752" <w1354785752@163.com>', // 发送者
+    from: "w1354785752@163.com", // 发送者
     to: "1354785752@qq.com", // 接收者
     subject: "部署通知", // 主题
     html: message, // 内容主体
