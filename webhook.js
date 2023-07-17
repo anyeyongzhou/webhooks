@@ -30,14 +30,13 @@ let server = http.createServer(function (req, res) {
         let date = dayjs().format("YYYY年M月D日 HH:mm:ss");
 
         //当提交信息不为deploy时只触发发送邮件
-        if (payload.head_commit["message"].toString().startsWith("deploy")) {
+        if (!payload.head_commit["message"].toString().startsWith("deploy")) {
           sendMail(`
           <h1>提交代码时间: ${date}</h1>
           <h2>提交人: ${payload.pusher.name}</h2>
           <h2>提交信息: ${
             payload.head_commit && payload.head_commit["message"]
           }</h2>
-          <h2>提交日志: ${payload}</h2>
         `);
 
           return;
