@@ -1,20 +1,22 @@
 const nodemailer = require("nodemailer");
+const user = "w1354785752@163.com"; //
+const smtp = "FIECWWXLIRPRWUJH"; //在邮箱中获取的smtp码
+
 let transporter = nodemailer.createTransport({
   // host: 'smtp.ethereal.email',
-  service: "163", // 使用了内置传输发送邮件 查看支持列表：https://nodemailer.com/smtp/well-known/
+  // service: "163", // 使用了内置传输发送邮件，支持qq、163、
   port: 465, // SMTP 端口
   secureConnection: true, // 使用了 SSL
   auth: {
-    user: "w1354785752@163.com",
-    // 这里密码不是qq密码，是你设置的smtp授权码
-    pass: "FIECWWXLIRPRWUJH",
+    user: user,
+    pass: smtp,
   },
 });
 
 function sendMail(message) {
   let mailOptions = {
-    from: "w1354785752@163.com", // 发送者
-    to: "1354785752@qq.com", // 接收者
+    from: "汪全玉" + user, // 发送者
+    to: "1354785752@qq.com", // 接收者，多个接受者用,隔开
     subject: "部署通知", // 主题
     html: message, // 内容主体
   };
