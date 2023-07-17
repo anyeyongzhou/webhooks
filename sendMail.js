@@ -5,8 +5,8 @@ const smtp = "FIECWWXLIRPRWUJH"; //在邮箱中获取的smtp码
 let transporter = nodemailer.createTransport({
   // host: 'smtp.ethereal.email',
   service: "163", // 使用了内置传输发送邮件，支持qq、163、
-  //port: 465, // SMTP 端口
-  //secureConnection: true, // 使用了 SSL
+  port: 465, // SMTP 端口
+  secureConnection: true, // 使用了 SSL
   auth: {
     user: user,
     pass: smtp,
