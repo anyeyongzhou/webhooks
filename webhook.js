@@ -20,16 +20,22 @@ let server = http.createServer(function (req, res) {
       let event = req.headers["x-github-event"];
       let id = req.headers["x-github-delivery"];
       if (sig !== sign(body)) {
-        return res.end("Not Allowed");
+        return res.end("不允许部署，查看SECRET是否正确");
       }
       res.setHeader("Content-Type", "application/json");
       res.end(JSON.stringify({ ok: true }));
       //===========分割线===================
       if (event === "push") {
-        //开始部署
+        let payload = JSON.parse(body);
+        let commitMsg = payload.head_commit;
+        if (commitMsg.startsWith("deploy")) {
+          //当提交信息为deploy时才触发部署
+          return;
+        }
+
         // 获取当前时间戳
         let nowTimestamp = dayjs().valueOf();
-        let payload = JSON.parse(body);
+        //开始部署
         let child = spawn("sh", [`./${payload.repository.name}.sh`]);
         console.log(payload.repository.name + "项目开始自动部署");
         let buffers = [];
@@ -49,7 +55,6 @@ let server = http.createServer(function (req, res) {
             <h1>部署日期: ${date}</h1>
             <h2>部署人: ${payload.pusher.name}</h2>
             <h2>部署时长: ${formattedDate}</h2>
-            <h2>部署邮箱: ${payload.pusher.email}</h2>
             <h2>提交信息: ${
               payload.head_commit && payload.head_commit["message"]
             }</h2>
