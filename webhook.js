@@ -44,6 +44,7 @@ let server = http.createServer(function (req, res) {
 
         // 获取当前时间戳
         let nowTimestamp = dayjs().valueOf();
+        console.log(dayjs());
         console.log(nowTimestamp);
         //开始部署
         let child = spawn("sh", [`./${payload.repository.name}.sh`]);
@@ -57,7 +58,8 @@ let server = http.createServer(function (req, res) {
           let logs = Buffer.concat(buffers).toString();
           // 获取当前时间戳
           let nowTimestamp_1 = dayjs().valueOf();
-          console.log(nowTimestamp1);
+          console.log(dayjs());
+          console.log(nowTimestamp_1);
           let formattedDate = dayjs(nowTimestamp_1 - nowTimestamp).format(
             "HH:mm"
           );
