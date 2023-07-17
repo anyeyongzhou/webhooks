@@ -27,15 +27,25 @@ let server = http.createServer(function (req, res) {
       //===========分割线===================
       if (event === "push") {
         let payload = JSON.parse(body);
-        let commitMsg = payload.head_commit;
-        console.log(commitMsg);
-        if (commitMsg.toString().startsWith("deploy")) {
-          //当提交信息为deploy时才触发部署
+        let date = dayjs().format("YYYY年M月D日 HH:mm:ss");
+
+        //当提交信息不为deploy时只触发发送邮件
+        if (payload.head_commit["message"].toString().startsWith("deploy")) {
+          sendMail(`
+          <h1>提交代码时间: ${date}</h1>
+          <h2>提交人: ${payload.pusher.name}</h2>
+          <h2>提交信息: ${
+            payload.head_commit && payload.head_commit["message"]
+          }</h2>
+          <h2>提交日志: ${payload}</h2>
+        `);
+
           return;
         }
 
         // 获取当前时间戳
         let nowTimestamp = dayjs().valueOf();
+        console.log(nowTimestamp);
         //开始部署
         let child = spawn("sh", [`./${payload.repository.name}.sh`]);
         console.log(payload.repository.name + "项目开始自动部署");
@@ -46,9 +56,9 @@ let server = http.createServer(function (req, res) {
         child.stdout.on("end", function () {
           console.log(payload.repository.name + "项目部署结束");
           let logs = Buffer.concat(buffers).toString();
-          let date = dayjs().format("YYYY年M月D日 HH:mm:ss");
           // 获取当前时间戳
           let nowTimestamp_1 = dayjs().valueOf();
+          console.log(nowTimestamp1);
           let formattedDate = dayjs(nowTimestamp_1 - nowTimestamp).format(
             "HH:mm"
           );
