@@ -1,4 +1,5 @@
 const nodemailer = require("nodemailer");
+const { simpleParser } = require("mailparser");
 const user = "w1354785752@163.com"; //
 const smtp = "FIECWWXLIRPRWUJH"; //在邮箱中获取的smtp码
 
@@ -17,6 +18,16 @@ let transporter = nodemailer.createTransport({
     user: user,
     pass: smtp,
   },
+});
+
+// 解析邮件头信息
+simpleParser(info.envelope, function (err, parsed) {
+  if (err) console.log(err);
+  return parsed.from.value[0].address;
+
+  //console.log(parsed.from.value[0].address); // 发件人地址
+  //console.log(parsed.to.value[0].address); // 收件人地址
+  //console.log(parsed.subject); // 邮件主题
 });
 
 function sendMail(message) {
@@ -41,10 +52,14 @@ function sendMail(message) {
     if (error) {
       return console.log("发送邮件失败：" + error);
     } else {
-      console.log("邮件发送: %s", info.messageId);
-      console.log(`Message: ${info}`);
-      console.log(`sent: ${info.response}`);
-      console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+      simpleParser(info.envelope, function (err, parsed) {
+        if (err) console.log(err);
+
+        console.log(parsed.from.value[0].address); // 发件人地址
+        //console.log(parsed.to.value[0].address); // 收件人地址
+        //console.log(parsed.subject); // 邮件主题
+      });
+      console.log("邮件发送: %s", info.response);
     }
   });
 }
