@@ -1,0 +1,65 @@
+<!--jquery-ajax发送请求-->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      type="text/javascript"
+      src="http://ajax.googleapis.com/ajax/libs
+/jquery/1.4.0/jquery.min.js"
+    ></script>
+    <title>jquery-ajax</title>
+  </head>
+  <body>
+    <div>
+      <div class="container">
+        <h2>JQuery发送Ajax请求</h2>
+        <button>GET</button>
+        <button>Post</button>
+        <button>通用</button>
+      </div>
+    </div>
+    <script>
+      $("button")
+        .eq(0)
+        .click(() => {
+          $.get(
+            "http://127.0.0.1:8081/jquery-server",
+            { a: 100, b: 200 },
+            data => {
+              console.log(data);
+            }
+          );
+        });
+      $("button")
+        .eq(1)
+        .click(() => {
+          $.post(
+            "http://127.0.0.1:8000/jquery-server-post",
+            { a: 100, b: 200 },
+            data => {
+              console.log(JSON.parse(data));
+            }
+          );
+        });
+      $("button")
+        .eq(2)
+        .click(() => {
+          $.ajax({
+            //url
+            url: "http://127.0.0.1:8000/jquery-server",
+            //发送参数
+            data: { a: 200, b: 300 },
+            //请求类型
+            type: "GET",
+            //成功的回调
+            success: data => {
+              console.log(data);
+            },
+          });
+        });
+    </script>
+  </body>
+</html>

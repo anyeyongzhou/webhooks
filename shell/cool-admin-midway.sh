@@ -1,9 +1,10 @@
 #!/bin/bash
+# 自动部署后台代码，打包镜像，创建容器，启动容器
 WORK_PATH='/usr/projects/cool-admin-midway'
 cd $WORK_PATH
-echo "先清理老代码"
-git reset --hard origin/master
-git clean -f
+# echo "先清理老代码"
+# git reset --hard origin/master   #丢弃本地的所有未提交的更改
+# git clean -f       #删除本地仓库中未跟踪的文件和目录
 echo "拉取最新代码"
 git pull origin main
 echo "开始构建镜像"

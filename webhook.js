@@ -2,7 +2,7 @@ let http = require("http");
 let crypto = require("crypto");
 let dayjs = require("dayjs");
 var spawn = require("child_process").spawn;
-let sendMail = require("./sendMail");
+let sendMail = require("./js/sendMail");
 const SECRET = "123456";
 function sign(data) {
   return "sha1=" + crypto.createHmac("sha1", SECRET).update(data).digest("hex");
@@ -16,11 +16,11 @@ let server = http.createServer(function (req, res) {
     });
     req.on("end", function () {
       let body = Buffer.concat(buffers);
-      let sig = req.headers["x-hub-signature"];
+      let sig = req.headers["x-hub-signature"]; //webhook设置Secret后x-hub-signature会携带过来
       let event = req.headers["x-github-event"];
       let id = req.headers["x-github-delivery"];
       if (sig !== sign(body)) {
-        return res.end("不允许部署，查看SECRET是否正确");
+        return res.end("不允许部署,查看SECRET是否正确");
       }
       res.setHeader("Content-Type", "application/json");
       res.end(JSON.stringify({ ok: true }));
@@ -44,10 +44,8 @@ let server = http.createServer(function (req, res) {
 
         // 获取当前时间戳
         let nowTimestamp = dayjs().valueOf();
-        console.log(dayjs());
-        console.log(nowTimestamp);
         //开始部署
-        let child = spawn("sh", [`./${payload.repository.name}.sh`]);
+        let child = spawn("sh", [`./shell/${payload.repository.name}.sh`]);
         console.log(payload.repository.name + "项目开始自动部署");
         let buffers = [];
         child.stdout.on("data", function (buffer) {
@@ -58,8 +56,6 @@ let server = http.createServer(function (req, res) {
           let logs = Buffer.concat(buffers).toString();
           // 获取当前时间戳
           let nowTimestamp_1 = dayjs().valueOf();
-          console.log(dayjs());
-          console.log(nowTimestamp_1);
           let formattedDate = dayjs(nowTimestamp_1 - nowTimestamp).format(
             "HH:mm"
           );
